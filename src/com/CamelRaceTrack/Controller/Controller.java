@@ -1,0 +1,122 @@
+package com.CamelRaceTrack.Controller;
+
+import com.CamelRaceTrack.Common.Commons;
+import com.CamelRaceTrack.Common.Constants;
+import com.CamelRaceTrack.ExceptionHandling.*;
+import com.CamelRaceTrack.Main;
+import com.CamelRaceTrack.Models.Camel;
+import com.CamelRaceTrack.Models.Inventory;
+import com.CamelRaceTrack.Models.UserCommand;
+
+import java.util.ArrayList;
+
+import static com.CamelRaceTrack.Main.*;
+
+public class Controller {
+
+    public static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException, InsufficientFundException {
+        switch (userCommand.getCommand()) {
+            case 'w' -> Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
+            case 'b' -> {
+                Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber());
+                if (betCamel.getDidwin().equals(true)) {
+                    int totalBetAmount = betCamel.getOdds() * (int) userCommand.getBetAmount();
+                    if (Inventory.CheckInventory(inventories, totalBetAmount)) {
+                        System.out.println(new StringBuilder().append("Payout: ").append(betCamel.getName()).append(", ").append(Constants.DOLLAR_SIGN)
+                                .append(totalBetAmount));
+                        DispenseAmount(inventories, betCamel.getOdds() * (int) userCommand.getBetAmount());
+                    }
+                    else
+                        throw new InsufficientFundException(Integer.toString(totalBetAmount));
+                } else
+                    throw new NoPayoutException(betCamel.getName());
+            }
+            case 'r' -> {
+                System.out.println("Restocked Inventory");
+                InitializeApplication();
+            }
+            case 'q' -> System.exit(0);
+            default -> throw new InvalidCommandException(userCommand.getUserInputCommand());
+        }
+    }
+
+    public static void DispenseAmount(ArrayList<Inventory> inventories, int amount) {
+
+        int[] notes = Inventory.GetAllAmounts(inventories);
+        int[] noteCounter = new int[notes.length];
+
+        for(int i =0; i<notes.length; i++){
+            if(amount>=notes[i]){
+                noteCounter[i] = (Math.min(amount / notes[i], inventories.get(i).getCount()));
+                amount = amount - noteCounter[i] * notes[i];
+            }
+        }
+        System.out.println("Dispensing:");
+        for(int i = notes.length - 1; i>=0 ; i--){
+            System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(notes[i]).append(",").append(noteCounter[i]));
+            inventories.get(i).setCount(inventories.get(i).getCount() - noteCounter[i]);
+        }
+
+//        Inventory.DisplayAllInventory(inventories);
+    }
+
+    public static Boolean ValidateRequest(UserCommand userCommand) throws InvalidBetException, InvalidCamelException, InvalidCommandException {
+        switch(userCommand.getCommand()) {
+            case 'b':
+                if(userCommand.getBetAmount() <= Constants.DEFAULT)
+                    throw new InvalidBetException(Float.toString(userCommand.getBetAmount()));
+            case 'w':
+                if(Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber()) == null)
+                    throw new InvalidCamelException((userCommand.getCamelNumber()));
+                else
+                    return true;
+            case 'r':
+            case 'q':
+                if( userCommand.getCamelNumber() != Constants.DEFAULT)
+                    throw new InvalidCommandException(userCommand.getUserInputCommand());
+                else
+                    return true;
+            default:
+                throw new InvalidCommandException(userCommand.getUserInputCommand());
+        }
+    }
+
+    public static UserCommand ParseInputData(String userInput) throws InvalidCommandException {
+        UserCommand userCommand = new UserCommand(userInput);
+        try {
+
+//            System.out.println("User Input is :" + userInput);
+
+            String[] data = userInput.split(Constants.SINGLE_SPACE);
+//            for (String element : data
+//            ) {
+//                System.out.println(element);
+//            }
+
+            //checking for a bet...
+            if(Commons.tryParseInt(data[0]))
+            {
+                userCommand.setCamelNumber(Integer.parseInt(data[0]));
+                userCommand.setCommand(Constants.BET);
+                userCommand.setBetAmount(Float.parseFloat(data[1]));
+            }
+            else {
+                //checking if the first input has multiple characters. Eg w2 10, q2
+                if(data[0].toCharArray().length > 1)
+                    throw new InvalidCommandException(userInput);
+                else
+                    userCommand.setCommand(data[0].toLowerCase().toCharArray()[0]);
+
+                //Checking for the second input..
+                if(data.length >1)
+                    userCommand.setCamelNumber(Integer.parseInt(data[1]));
+            }
+
+            return userCommand;
+        } catch (Exception ex) {
+            throw new InvalidCommandException(userInput);
+        }
+    }
+
+
+}
