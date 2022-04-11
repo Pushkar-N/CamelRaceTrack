@@ -1,29 +1,23 @@
-package com.CamelRaceTrack;
+package com.CamelRaceTrack.Models;
+
+import com.CamelRaceTrack.Common.Constants;
 
 import java.util.ArrayList;
 
 public class Inventory {
-    public int Amount;
-    public int Count;
+    private int Amount;
+    private int Count;
 
     public static void DisplayAllInventory(ArrayList<Inventory> inventories) {
         System.out.println("Inventory:");
         for(int i = inventories.size() - 1; i>=0 ; i--) {
-            System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(inventories.get(i).Amount).append(",").append(inventories.get(i).Count).toString());
+            System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(inventories.get(i).Amount).append(",").append(inventories.get(i).Count));
         }
-//        for (Inventory i:inventories
-//             ) {
-//            System.out.println(Constants.DOLLAR_SIGN + i.getAmount()+","+i.getCount());
-//        }
     }
 
     public static boolean CheckInventory(ArrayList<Inventory> inventories, int amount) {
         int totalAmount = Inventory.GetTotalAmount(inventories);
-        if(totalAmount < amount){
-            return false;
-        }
-        else
-            return true;
+        return totalAmount >= amount;
     }
 
     private static int GetTotalAmount(ArrayList<Inventory> inventories) {

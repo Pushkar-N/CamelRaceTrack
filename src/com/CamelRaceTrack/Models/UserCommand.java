@@ -1,10 +1,12 @@
-package com.CamelRaceTrack;
+package com.CamelRaceTrack.Models;
+
+import com.CamelRaceTrack.Common.Constants;
 
 public class UserCommand {
-    public int CamelNumber;
-    public float BetAmount;
-    public Character Command;
-    public String UserInputCommand;
+    private int CamelNumber;
+    private float BetAmount;
+    private Character Command;
+    private final String UserInputCommand;
 
     public int getCamelNumber() {
         return CamelNumber;
@@ -26,7 +28,7 @@ public class UserCommand {
         Command = command;
     }
 
-    public void setBetAmount(int betAmount) {
+    public void setBetAmount(float betAmount) {
         BetAmount = betAmount;
     }
 

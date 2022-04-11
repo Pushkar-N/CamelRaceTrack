@@ -1,4 +1,4 @@
-package com.CamelRaceTrack;
+package com.CamelRaceTrack.Common;
 
 public class Commons {
     public static boolean tryParseInt(String value){

@@ -1,14 +1,14 @@
-package com.CamelRaceTrack;
+package com.CamelRaceTrack.Models;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
 public class Camel {
-    public Integer Number;
-    public String Name;
-    public Integer Odds;
-    public Boolean Didwin;
+    private Integer Number;
+    private String Name;
+    private Integer Odds;
+    private Boolean Didwin;
 
     public static void DisplayAllCamels(ArrayList<Camel> racecamels) {
         System.out.println("Camels: ");
@@ -81,7 +81,7 @@ public class Camel {
     public static void SetWinningCamel(int camelNumber, ArrayList<Camel> racecamels) {
         for (Camel racecamel : racecamels) {
             //setting the current winning camel property to false..
-            if(racecamel.getNumber() != camelNumber && racecamel.getDidwin() == true)
+            if(racecamel.getNumber() != camelNumber && racecamel.getDidwin())
                 racecamel.setDidwin(false);
             else if(racecamel.getNumber() == camelNumber){
                 racecamel.setDidwin(true);

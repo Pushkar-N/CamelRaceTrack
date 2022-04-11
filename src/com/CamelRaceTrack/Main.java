@@ -1,5 +1,12 @@
 package com.CamelRaceTrack;
 
+import com.CamelRaceTrack.Common.Commons;
+import com.CamelRaceTrack.Common.Constants;
+import com.CamelRaceTrack.ExceptionHandling.*;
+import com.CamelRaceTrack.Models.Camel;
+import com.CamelRaceTrack.Models.Inventory;
+import com.CamelRaceTrack.Models.UserCommand;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,8 +29,9 @@ public class Main {
                 if(ValidateRequest(userCommand))
                     ProcessRequest(userCommand);
 
-            } catch (Exception | InvalidBetException | InvalidCamelException | InvalidCommandException | NoPayoutException ex) {
-                if(ex instanceof InvalidCamelException || ex instanceof  InvalidBetException || ex instanceof InvalidCommandException || ex instanceof NoPayoutException)
+            } catch (Exception | InvalidBetException | InvalidCamelException | InvalidCommandException | NoPayoutException | InsufficientFundException ex) {
+                if(ex instanceof InvalidCamelException || ex instanceof  InvalidBetException || ex instanceof InvalidCommandException
+                        || ex instanceof NoPayoutException || ex instanceof InsufficientFundException)
                     continue;
                 else
                     System.out.println("Exception in application :" + ex.getMessage());
@@ -32,17 +40,20 @@ public class Main {
 
     }
 
-    private static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException {
+    private static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException, InsufficientFundException {
         switch (userCommand.getCommand()) {
-            case 'w' -> Camel.SetWinningCamel(userCommand.CamelNumber, racecamels);
+            case 'w' -> Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
             case 'b' -> {
-                Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.CamelNumber);
+                Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber());
                 if (betCamel.getDidwin().equals(true)) {
-                    if (Inventory.CheckInventory(inventories, betCamel.getOdds() * (int) userCommand.getBetAmount())) {
+                    int totalBetAmount = betCamel.getOdds() * (int) userCommand.getBetAmount();
+                    if (Inventory.CheckInventory(inventories, totalBetAmount)) {
                         System.out.println(new StringBuilder().append("Payout: ").append(betCamel.getName()).append(", ").append(Constants.DOLLAR_SIGN)
-                                .append(betCamel.getOdds() * (int) userCommand.getBetAmount()));
+                                .append(totalBetAmount));
                         DispenseAmount(inventories, betCamel.getOdds() * (int) userCommand.getBetAmount());
                     }
+                    else
+                        throw new InsufficientFundException(Integer.toString(totalBetAmount));
                 } else
                     throw new NoPayoutException(betCamel.getName());
             }
@@ -69,7 +80,7 @@ public class Main {
         System.out.println("Dispensing:");
         for(int i = notes.length - 1; i>=0 ; i--){
             System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(notes[i]).append(",").append(noteCounter[i]));
-            inventories.get(i).Count -= noteCounter[i];
+            inventories.get(i).setCount(inventories.get(i).getCount() - noteCounter[i]);
         }
 
 //        Inventory.DisplayAllInventory(inventories);
@@ -88,7 +99,7 @@ public class Main {
             case 'r':
             case 'q':
                 if( userCommand.getCamelNumber() != Constants.DEFAULT)
-                    throw new InvalidCommandException(userCommand.UserInputCommand);
+                    throw new InvalidCommandException(userCommand.getUserInputCommand());
                 else
                 return true;
             default:
@@ -100,7 +111,7 @@ public class Main {
         UserCommand userCommand = new UserCommand(userInput);
         try {
 
-            System.out.println("User Input is :" + userInput);
+//            System.out.println("User Input is :" + userInput);
 
             String[] data = userInput.split(Constants.SINGLE_SPACE);
 //            for (String element : data
@@ -111,27 +122,21 @@ public class Main {
             //checking for a bet...
             if(Commons.tryParseInt(data[0]))
             {
-                userCommand.CamelNumber = Integer.parseInt(data[0]);
-                userCommand.Command = Constants.BET;
-                userCommand.BetAmount = Float.parseFloat(data[1]);
+                userCommand.setCamelNumber(Integer.parseInt(data[0]));
+                userCommand.setCommand(Constants.BET);
+                userCommand.setBetAmount(Float.parseFloat(data[1]));
             }
             else {
                 //checking if the first input has multiple characters. Eg w2 10, q2
                 if(data[0].toCharArray().length > 1)
                     throw new InvalidCommandException(userInput);
                 else
-                    userCommand.Command = data[0].toLowerCase().toCharArray()[0];
+                    userCommand.setCommand(data[0].toLowerCase().toCharArray()[0]);
 
                 //Checking for the second input..
                 if(data.length >1)
-                    userCommand.CamelNumber = Integer.parseInt(data[1]);
+                    userCommand.setCamelNumber(Integer.parseInt(data[1]));
             }
-
-//            System.out.println("UserInputCommand :" + userCommand.getUserInputCommand()
-//                    + ", Command :" + userCommand.getCommand()
-//                    + ", Camel Number :" + userCommand.getCamelNumber()
-//                    + ", BetAmount :" + userCommand.getBetAmount()
-//            );
 
             return userCommand;
         } catch (Exception ex) {
