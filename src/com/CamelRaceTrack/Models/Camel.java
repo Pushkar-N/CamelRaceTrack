@@ -1,5 +1,6 @@
 package com.CamelRaceTrack.Models;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -14,7 +15,7 @@ public class Camel {
         System.out.println("Camels: ");
         for (Camel c: racecamels
              ) {
-            System.out.println(c.getNumber()+","+c.getName()+","+c.getOdds()+","+c.getDidwin());
+            System.out.println(MessageFormat.format("{0},{1},{2},{3}", c.getNumber(), c.getName(), c.getOdds(), c.getDidwin().equals(true)?"won":"lost"));
         }
     }
 

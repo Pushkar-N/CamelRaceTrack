@@ -2,6 +2,7 @@ package com.CamelRaceTrack.Models;
 
 import com.CamelRaceTrack.Common.Constants;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class Inventory {
@@ -11,7 +12,7 @@ public class Inventory {
     public static void DisplayAllInventory(ArrayList<Inventory> inventories) {
         System.out.println("Inventory:");
         for(int i = inventories.size() - 1; i>=0 ; i--) {
-            System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(inventories.get(i).Amount).append(",").append(inventories.get(i).Count));
+            System.out.println(MessageFormat.format("{0}{1},{2}",Constants.DOLLAR_SIGN,inventories.get(i).Amount,inventories.get(i).Count));
         }
     }
 

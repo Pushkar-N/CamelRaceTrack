@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class Controller {
 
-    public static ArrayList<Camel> racecamels ;
-    public static ArrayList<Inventory> inventories ;
+    private static ArrayList<Camel> racecamels ;
+    private static ArrayList<Inventory> inventories ;
 
     public static void InitializeApplication() {
         racecamels = new ArrayList<>();
@@ -33,8 +33,9 @@ public class Controller {
         inventories.add(new Inventory(5,10));
         inventories.add(new Inventory(1,10));
 
-        Camel.DisplayAllCamels(racecamels);
         Inventory.DisplayAllInventory(inventories);
+        Camel.DisplayAllCamels(racecamels);
+
     }
 
     public static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException, InsufficientFundException {
