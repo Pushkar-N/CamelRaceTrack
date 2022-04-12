@@ -4,7 +4,7 @@ import com.CamelRaceTrack.Common.Constants;
 
 public class UserCommand {
     private int CamelNumber;
-    private float BetAmount;
+    private int BetAmount;
     private Character Command;
     private final String UserInputCommand;
 
@@ -28,7 +28,7 @@ public class UserCommand {
         Command = command;
     }
 
-    public void setBetAmount(float betAmount) {
+    public void setBetAmount(int betAmount) {
         BetAmount = betAmount;
     }
 
@@ -41,7 +41,7 @@ public class UserCommand {
     }
 
     public UserCommand(String userInput){
-        this.BetAmount = (float)(Constants.DEFAULT) ;
+        this.BetAmount = (Constants.DEFAULT) ;
         this.CamelNumber = 0;
         this.Command = Constants.EMPTY_CHARACTER;
         this.UserInputCommand = userInput;

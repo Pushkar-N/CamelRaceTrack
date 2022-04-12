@@ -46,7 +46,6 @@ public class Controller {
         switch (userCommand.getCommand()) {
             case Constants.WINNER -> {
                 Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
-//                DisplayCurrentApplicationStatus();
             }
             case Constants.BET -> {
                 Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber());
@@ -61,7 +60,6 @@ public class Controller {
                         throw new InsufficientFundException(Integer.toString(totalBetAmount));
                 } else
                     throw new NoPayoutException(betCamel.getName());
-//                DisplayCurrentApplicationStatus();
             }
             case Constants.RESTOCK -> {
                 System.out.println("Restocked Inventory");
@@ -95,7 +93,7 @@ public class Controller {
     public static Boolean ValidateRequest(UserCommand userCommand) throws InvalidBetException, InvalidCamelException, InvalidCommandException {
         switch(userCommand.getCommand()) {
             case Constants.BET:
-                if(userCommand.getBetAmount() <= Constants.DEFAULT || !Commons.tryParseInt(Float.toString(userCommand.getBetAmount())))
+                if(userCommand.getBetAmount() <= Constants.DEFAULT )
                     throw new InvalidBetException(Float.toString(userCommand.getBetAmount()));
             case Constants.WINNER:
                 if(Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber()) == null)
@@ -113,41 +111,35 @@ public class Controller {
         }
     }
 
-    public static UserCommand ParseInputData(String userInput) throws InvalidCommandException {
+    public static UserCommand ParseInputData(String userInput) throws InvalidCommandException, InvalidBetException {
         UserCommand userCommand = new UserCommand(userInput);
-        try {
 
-//            System.out.println("User Input is :" + userInput);
+        String[] data = userInput.split(Constants.SINGLE_SPACE);
 
-            String[] data = userInput.split(Constants.SINGLE_SPACE);
-//            for (String element : data
-//            ) {
-//                System.out.println(element);
-//            }
-
-            //checking for a bet...
-            if(Commons.tryParseInt(data[0]))
-            {
-                userCommand.setCamelNumber(Integer.parseInt(data[0]));
-                userCommand.setCommand(Constants.BET);
-                userCommand.setBetAmount(Float.parseFloat(data[1]));
-            }
-            else {
-                //checking if the first input has multiple characters. Eg w2 10, q2
-                if(data[0].toCharArray().length > 1)
-                    throw new InvalidCommandException(userInput);
-                else
-                    userCommand.setCommand(data[0].toLowerCase().toCharArray()[0]);
-
-                //Checking for the second input..
-                if(data.length >1)
-                    userCommand.setCamelNumber(Integer.parseInt(data[1]));
-            }
-
-            return userCommand;
-        } catch (Exception ex) {
-            throw new InvalidCommandException(userInput);
+        //checking for a bet...
+        if(Commons.tryParseInt(data[0]))
+        {
+            userCommand.setCamelNumber(Integer.parseInt(data[0]));
+            userCommand.setCommand(Constants.BET);
+            if(Commons.tryParseInt(data[1]))
+                userCommand.setBetAmount(Integer.parseInt(data[1]));
+            else
+                throw new InvalidBetException(data[1]);
         }
+        else {
+            //checking if the first input has multiple characters. Eg w2 10, q2
+            if(data[0].toCharArray().length > 1)
+                throw new InvalidCommandException(userInput);
+            else
+                userCommand.setCommand(data[0].toLowerCase().toCharArray()[0]);
+
+            //Checking for the second input..
+            if(data.length >1)
+                userCommand.setCamelNumber(Integer.parseInt(data[1]));
+        }
+
+        return userCommand;
+
     }
 
 
