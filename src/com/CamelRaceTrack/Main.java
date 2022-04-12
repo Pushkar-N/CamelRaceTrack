@@ -12,10 +12,11 @@ public class Main {
        Controller.InitializeApplication();
 
         while(true) {
-            Scanner sc = new Scanner(System.in);
-            String userInput = sc.nextLine();
-
             try {
+                Controller.DisplayCurrentApplicationStatus();
+
+                Scanner sc = new Scanner(System.in);
+                String userInput = sc.nextLine();
 
                 UserCommand userCommand = Controller.ParseInputData(userInput);
                 if(Controller.ValidateRequest(userCommand))

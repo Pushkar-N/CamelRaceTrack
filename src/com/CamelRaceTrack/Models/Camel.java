@@ -86,7 +86,6 @@ public class Camel {
                 racecamel.setDidwin(false);
             else if(racecamel.getNumber() == camelNumber){
                 racecamel.setDidwin(true);
-                Camel.DisplayAllCamels(racecamels);
             }
         }
     }

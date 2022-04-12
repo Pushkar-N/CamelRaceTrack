@@ -33,15 +33,22 @@ public class Controller {
         inventories.add(new Inventory(5,10));
         inventories.add(new Inventory(1,10));
 
+//        DisplayCurrentApplicationStatus();
+
+    }
+
+    public static void DisplayCurrentApplicationStatus(){
         Inventory.DisplayAllInventory(inventories);
         Camel.DisplayAllCamels(racecamels);
-
     }
 
     public static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException, InsufficientFundException {
         switch (userCommand.getCommand()) {
-            case 'w' -> Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
-            case 'b' -> {
+            case Constants.WINNER -> {
+                Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
+//                DisplayCurrentApplicationStatus();
+            }
+            case Constants.BET -> {
                 Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber());
                 if (betCamel.getDidwin().equals(true)) {
                     int totalBetAmount = betCamel.getOdds() * (int) userCommand.getBetAmount();
@@ -54,12 +61,13 @@ public class Controller {
                         throw new InsufficientFundException(Integer.toString(totalBetAmount));
                 } else
                     throw new NoPayoutException(betCamel.getName());
+//                DisplayCurrentApplicationStatus();
             }
-            case 'r' -> {
+            case Constants.RESTOCK -> {
                 System.out.println("Restocked Inventory");
                 InitializeApplication();
             }
-            case 'q' -> System.exit(0);
+            case Constants.QUIT -> System.exit(0);
             default -> throw new InvalidCommandException(userCommand.getUserInputCommand());
         }
     }
@@ -86,16 +94,16 @@ public class Controller {
 
     public static Boolean ValidateRequest(UserCommand userCommand) throws InvalidBetException, InvalidCamelException, InvalidCommandException {
         switch(userCommand.getCommand()) {
-            case 'b':
-                if(userCommand.getBetAmount() <= Constants.DEFAULT)
+            case Constants.BET:
+                if(userCommand.getBetAmount() <= Constants.DEFAULT || !Commons.tryParseInt(Float.toString(userCommand.getBetAmount())))
                     throw new InvalidBetException(Float.toString(userCommand.getBetAmount()));
-            case 'w':
+            case Constants.WINNER:
                 if(Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber()) == null)
                     throw new InvalidCamelException((userCommand.getCamelNumber()));
                 else
                     return true;
-            case 'r':
-            case 'q':
+            case Constants.RESTOCK:
+            case Constants.QUIT:
                 if( userCommand.getCamelNumber() != Constants.DEFAULT)
                     throw new InvalidCommandException(userCommand.getUserInputCommand());
                 else
