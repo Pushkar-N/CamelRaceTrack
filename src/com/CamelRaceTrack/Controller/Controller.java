@@ -6,6 +6,8 @@ import com.CamelRaceTrack.ExceptionHandling.*;
 import com.CamelRaceTrack.Models.Camel;
 import com.CamelRaceTrack.Models.Inventory;
 import com.CamelRaceTrack.Models.UserCommand;
+
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 
@@ -42,16 +44,14 @@ public class Controller {
 
     public static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException, InsufficientFundException {
         switch (userCommand.getCommand()) {
-            case Constants.WINNER -> {
+            case Constants.WINNER ->
                 Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
-            }
             case Constants.BET -> {
                 Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber());
                 if (betCamel.getDidwin().equals(true)) {
                     int totalBetAmount = betCamel.getOdds() * (int) userCommand.getBetAmount();
                     if (Inventory.CheckInventory(inventories, totalBetAmount)) {
-                        System.out.println(new StringBuilder().append("Payout: ").append(betCamel.getName()).append(", ").append(Constants.DOLLAR_SIGN)
-                                .append(totalBetAmount));
+                        System.out.println(MessageFormat.format("Payout: {0}{1}",Constants.DOLLAR_SIGN, totalBetAmount);
                         DispenseAmount(inventories, betCamel.getOdds() * (int) userCommand.getBetAmount());
                     }
                     else
@@ -81,7 +81,7 @@ public class Controller {
         }
         System.out.println("Dispensing:");
         for(int i = notes.length - 1; i>=0 ; i--){
-            System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(notes[i]).append(",").append(noteCounter[i]));
+            System.out.println(MessageFormat.format("{0}{1},{2}", Constants.DOLLAR_SIGN,notes[i],noteCounter[i]));
             inventories.get(i).setCount(inventories.get(i).getCount() - noteCounter[i]);
         }
     }
