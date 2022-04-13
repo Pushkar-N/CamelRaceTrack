@@ -33,8 +33,6 @@ public class Controller {
         inventories.add(new Inventory(5,10));
         inventories.add(new Inventory(1,10));
 
-//        DisplayCurrentApplicationStatus();
-
     }
 
     public static void DisplayCurrentApplicationStatus(){
@@ -86,8 +84,6 @@ public class Controller {
             System.out.println(new StringBuilder().append(Constants.DOLLAR_SIGN).append(notes[i]).append(",").append(noteCounter[i]));
             inventories.get(i).setCount(inventories.get(i).getCount() - noteCounter[i]);
         }
-
-//        Inventory.DisplayAllInventory(inventories);
     }
 
     public static Boolean ValidateRequest(UserCommand userCommand) throws InvalidBetException, InvalidCamelException, InvalidCommandException {
@@ -137,7 +133,6 @@ public class Controller {
             if(data.length >1)
                 userCommand.setCamelNumber(Integer.parseInt(data[1]));
         }
-
         return userCommand;
 
     }

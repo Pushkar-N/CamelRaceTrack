@@ -1,7 +1,6 @@
 package com.CamelRaceTrack.Models;
 
 import com.CamelRaceTrack.Common.Constants;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 

@@ -1,7 +1,9 @@
 package com.CamelRaceTrack.ExceptionHandling;
 
+import java.text.MessageFormat;
+
 public class InvalidBetException extends Throwable {
-    public InvalidBetException(String s) {
-        System.out.println(new StringBuilder().append("Invalid Bet:").append(s));
+    public InvalidBetException(String betAmount) {
+        System.out.println(MessageFormat.format("Invalid Bet: {0}",betAmount));
     }
 }
