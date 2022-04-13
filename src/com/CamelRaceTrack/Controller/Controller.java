@@ -109,8 +109,14 @@ public class Controller {
 
     public static UserCommand ParseInputData(String userInput) throws InvalidCommandException, InvalidBetException {
         UserCommand userCommand = new UserCommand(userInput);
+        String[] data;
 
-        String[] data = userInput.split(Constants.SINGLE_SPACE);
+        //checking if the user input is empty string.
+        if(userInput.trim().isEmpty())
+            throw new InvalidCommandException(userInput);
+        else {
+            data = userInput.split(Constants.SINGLE_SPACE);
+        }
 
         //checking for a bet...
         if(Commons.tryParseInt(data[0]))
@@ -134,7 +140,6 @@ public class Controller {
                 userCommand.setCamelNumber(Integer.parseInt(data[1]));
         }
         return userCommand;
-
     }
 
 

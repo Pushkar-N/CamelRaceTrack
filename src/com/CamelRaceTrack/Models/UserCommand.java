@@ -12,7 +12,7 @@ public class UserCommand {
         return CamelNumber;
     }
 
-    public Character getCommand() {
+    public char getCommand() {
         return Command;
     }
 

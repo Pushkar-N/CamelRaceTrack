@@ -3,6 +3,8 @@ package com.CamelRaceTrack;
 import com.CamelRaceTrack.Controller.*;
 import com.CamelRaceTrack.ExceptionHandling.*;
 import com.CamelRaceTrack.Models.UserCommand;
+
+import java.text.MessageFormat;
 import java.util.Scanner;
 
 public class Main {
@@ -27,7 +29,7 @@ public class Main {
                         || ex instanceof NoPayoutException || ex instanceof InsufficientFundException)
                     continue;
                 else
-                    System.out.println("Exception in application :" + ex.getMessage());
+                    System.out.println(MessageFormat.format("Exception in application : {0}",ex.getMessage()));
             }
         }
 
