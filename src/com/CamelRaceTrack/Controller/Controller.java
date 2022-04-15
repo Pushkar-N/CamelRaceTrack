@@ -6,6 +6,7 @@ import com.CamelRaceTrack.ExceptionHandling.*;
 import com.CamelRaceTrack.Models.Camel;
 import com.CamelRaceTrack.Models.Inventory;
 import com.CamelRaceTrack.Models.UserCommand;
+import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -13,10 +14,15 @@ import java.util.ArrayList;
 
 public class Controller {
 
+    private static org.apache.log4j.Logger log = Logger.getLogger(Controller.class);
+
     private static ArrayList<Camel> racecamels ;
     private static ArrayList<Inventory> inventories ;
 
     public static void InitializeApplication() {
+
+        log.info("Initialising application.");
+        log.info("Initialising the Camel list.");
         racecamels = new ArrayList<>();
 
         racecamels.add(new Camel(1,Constants.THAT_DRAN_GRAY_CAT, 5, true));
@@ -27,6 +33,7 @@ public class Controller {
         racecamels.add(new Camel(6,Constants.PA_KETTLE, 5, false));
         racecamels.add(new Camel(7,Constants.GIN_STRINGER, 6, false));
 
+        log.info("Initialising the Inventory list.");
         inventories = new ArrayList<>();
 
         inventories.add(new Inventory(100,10));
@@ -38,6 +45,7 @@ public class Controller {
     }
 
     public static void DisplayCurrentApplicationStatus(){
+        log.info("Displaying the Current Application status");
         Inventory.DisplayAllInventory(inventories);
         Camel.DisplayAllCamels(racecamels);
     }
@@ -51,7 +59,7 @@ public class Controller {
                 if (betCamel.getDidwin().equals(true)) {
                     int totalBetAmount = betCamel.getOdds() * (int) userCommand.getBetAmount();
                     if (Inventory.CheckInventory(inventories, totalBetAmount)) {
-                        System.out.println(MessageFormat.format("Payout: {0}{1}",Constants.DOLLAR_SIGN, totalBetAmount);
+                        System.out.println(MessageFormat.format("Payout: {0}{1}",Constants.DOLLAR_SIGN, totalBetAmount));
                         DispenseAmount(inventories, betCamel.getOdds() * (int) userCommand.getBetAmount());
                     }
                     else
