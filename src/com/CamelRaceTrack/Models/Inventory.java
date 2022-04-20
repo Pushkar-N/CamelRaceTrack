@@ -5,8 +5,24 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class Inventory {
-    private int Amount;
+    private final int Amount;
     private int Count;
+
+    public int getAmount() {
+        return Amount;
+    }
+    public int getCount() {
+        return Count;
+    }
+
+    public void setCount(int count) {
+        Count = count;
+    }
+
+    public Inventory(Integer amount, Integer count){
+        this.Amount = amount;
+        this.Count = count;
+    }
 
     public static void DisplayAllInventory(ArrayList<Inventory> inventories) {
         System.out.println("Inventory:");
@@ -36,24 +52,5 @@ public class Inventory {
         return notes;
     }
 
-    public int getAmount() {
-        return Amount;
-    }
 
-    public int getCount() {
-        return Count;
-    }
-
-    public void setAmount(int amount) {
-        Amount = amount;
-    }
-
-    public void setCount(int count) {
-        Count = count;
-    }
-
-    public Inventory(Integer amount, Integer count){
-        this.Amount = amount;
-        this.Count = count;
-    }
 }

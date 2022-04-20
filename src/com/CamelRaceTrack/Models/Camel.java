@@ -9,12 +9,25 @@ import java.util.Objects;
 
 public class Camel {
 
-    private static org.apache.log4j.Logger log = Logger.getLogger(Camel.class);
+    private static final org.apache.log4j.Logger log = Logger.getLogger(Camel.class);
 
-    private Integer Number;
-    private String Name;
-    private Integer Odds;
+    private final Integer Number;
+    private final String Name;
+    private final Integer Odds;
     private Boolean Didwin;
+
+    public Boolean getDidwin() {
+        return Didwin;
+    }
+    public Integer getNumber() {
+        return Number;
+    }
+    public Integer getOdds() {
+        return Odds;
+    }
+    public String getName() {
+        return Name;
+    }
 
     public static void DisplayAllCamels(ArrayList<Camel> racecamels) {
         log.info("Inside the DisplayAllCamels method.");
@@ -26,36 +39,9 @@ public class Camel {
         log.info("All Camels displayed successfully.");
     }
 
-    public Boolean getDidwin() {
-        return Didwin;
-    }
-
-    public Integer getNumber() {
-        return Number;
-    }
-
-    public Integer getOdds() {
-        return Odds;
-    }
-
-    public String getName() {
-        return Name;
-    }
 
     public void setDidwin(Boolean didwin) {
         Didwin = didwin;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public void setNumber(Integer number) {
-        Number = number;
-    }
-
-    public void setOdds(Integer odds) {
-        Odds = odds;
     }
 
     public Camel(Integer number, String name, Integer odds, Boolean didwin)
@@ -69,17 +55,8 @@ public class Camel {
     public static Camel findByCamelNumber(Collection<Camel> camelList, int camelNumber)
     {
         for (Camel c : camelList){
-            if(c.getNumber().equals(camelNumber)){
-                return c;
-            }
-        }
-        return null;
-    }
 
-    public static Camel getWinningCamel(Collection<Camel> camelList)
-    {
-        for (Camel c : camelList){
-            if(c.getDidwin().equals(true)){
+            if(c.getNumber().equals(camelNumber)){
                 return c;
             }
         }
