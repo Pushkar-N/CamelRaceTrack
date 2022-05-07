@@ -11,45 +11,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public class Controller {
+public class Controller extends Initialize {
 
     private static org.apache.log4j.Logger log = Logger.getLogger(Controller.class);
-
-    private static ArrayList<Camel> racecamels;
-    private static Map<Integer, Integer> inventory ;
-
-    public static void controller() {
-        log.info("Initialising application.");
-        racecamels = new ArrayList<>();
-        inventory = new LinkedHashMap<>();
-
-        log.info("Initialising the Camel list.");
-        racecamels.add(new Camel(1,Constants.THAT_DRAN_GRAY_CAT, 5, true));
-        racecamels.add(new Camel(2,Constants.FORT_UTOPIA, 10, false));
-        racecamels.add(new Camel(3,Constants.COUNT_SHEEP, 9, false));
-        racecamels.add(new Camel(4,Constants.MS_TRAITOUR, 4, false));
-        racecamels.add(new Camel(5,Constants.REAL_PRINCESS, 3, false));
-        racecamels.add(new Camel(6,Constants.PA_KETTLE, 5, false));
-        racecamels.add(new Camel(7,Constants.GIN_STRINGER, 6, false));
-
-        log.info("Initialising the Inventory list.");
-        inventory.put(100,10);
-        inventory.put(20,10);
-        inventory.put(10,10);
-        inventory.put(5,10);
-        inventory.put(1,10);
-    }
-
-    public static void DisplayCurrentApplicationStatus(){
-        log.info("Displaying the Current Application status");
-
-        System.out.println("Inventory:");
-        inventory.forEach((key,value) -> System.out.println(MessageFormat.format("{0}{1},{2}",Constants.DOLLAR_SIGN,key,value)));
-
-        System.out.println("Camels:");
-        racecamels.forEach(camel -> System.out.println(MessageFormat.format("{0},{1},{2},{3}"
-                    , camel.getNumber(), camel.getName(), camel.getOdds(), camel.getDidwin().equals(true)?"won":"lost")));
-    }
 
     public static Command ParseInput(String userInput) throws InvalidCommandException, InvalidBetException {
 
@@ -102,10 +66,6 @@ public class Controller {
             inventory.put(key,inventory.get(key) - noteCounter); //getting existing number of notes and subtracting the count.
             log.info(MessageFormat.format("Updated value of inventory >> Currency : {0} , Count : " ,key, inventory.get(key)));
         }
-    }
-
-    public static int getTotalInventoryValue() {
-        return inventory.entrySet().stream().mapToInt(value -> value.getKey()* value.getValue()).sum();
     }
 
     public static void setWinningCamel(int winningCamel) throws InvalidCamelException {
