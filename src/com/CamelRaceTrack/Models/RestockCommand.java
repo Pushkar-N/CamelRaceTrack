@@ -8,6 +8,6 @@ public class RestockCommand implements Command {
     @Override
     public void processRequest() {
         System.out.println("Restocked Inventory");
-        Controller.controller();
+        Controller.Initialize();
     }
 }
