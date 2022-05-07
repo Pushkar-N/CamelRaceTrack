@@ -58,7 +58,7 @@ public class Controller {
             if(Pattern.matches("[w]?\\s\\d+",userInput)) {
                 return new WinnerCommand(userInput);
             } else if(Pattern.matches("[q]?",userInput)) {
-                return new QuiCommand();
+                return new QuitCommand();
             } else if(Pattern.matches("[r]?",userInput)) {
                 return new RestockCommand();
             } else if(Pattern.matches("\\d+\\s\\d+",userInput)) {

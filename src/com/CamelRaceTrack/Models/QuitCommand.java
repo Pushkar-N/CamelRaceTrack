@@ -2,7 +2,7 @@ package com.CamelRaceTrack.Models;
 
 import com.CamelRaceTrack.Interfaces.Command;
 
-public class QuiCommand implements Command {
+public class QuitCommand implements Command {
 
     @Override
     public void processRequest() {
