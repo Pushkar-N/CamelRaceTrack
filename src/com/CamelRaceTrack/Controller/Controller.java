@@ -1,30 +1,29 @@
 package com.CamelRaceTrack.Controller;
 
-import com.CamelRaceTrack.Common.Commons;
 import com.CamelRaceTrack.Common.Constants;
 import com.CamelRaceTrack.ExceptionHandling.*;
-import com.CamelRaceTrack.Models.Camel;
-import com.CamelRaceTrack.Models.Inventory;
-import com.CamelRaceTrack.Models.UserCommand;
+import com.CamelRaceTrack.Interfaces.Command;
+import com.CamelRaceTrack.Models.*;
 import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 public class Controller {
 
     private static org.apache.log4j.Logger log = Logger.getLogger(Controller.class);
 
-    private static ArrayList<Camel> racecamels ;
-    private static ArrayList<Inventory> inventories ;
+    private static ArrayList<Camel> racecamels;
+    private static Map<Integer, Integer> inventory ;
 
-    public static void InitializeApplication() {
-
+    public static void controller() {
         log.info("Initialising application.");
-        log.info("Initialising the Camel list.");
         racecamels = new ArrayList<>();
+        inventory = new LinkedHashMap<>();
 
+        log.info("Initialising the Camel list.");
         racecamels.add(new Camel(1,Constants.THAT_DRAN_GRAY_CAT, 5, true));
         racecamels.add(new Camel(2,Constants.FORT_UTOPIA, 10, false));
         racecamels.add(new Camel(3,Constants.COUNT_SHEEP, 9, false));
@@ -34,121 +33,100 @@ public class Controller {
         racecamels.add(new Camel(7,Constants.GIN_STRINGER, 6, false));
 
         log.info("Initialising the Inventory list.");
-        inventories = new ArrayList<>();
-
-        inventories.add(new Inventory(100,10));
-        inventories.add(new Inventory(20,10));
-        inventories.add(new Inventory(10,10));
-        inventories.add(new Inventory(5,10));
-        inventories.add(new Inventory(1,10));
-
+        inventory.put(100,10);
+        inventory.put(20,10);
+        inventory.put(10,10);
+        inventory.put(5,10);
+        inventory.put(1,10);
     }
 
     public static void DisplayCurrentApplicationStatus(){
         log.info("Displaying the Current Application status");
-        Inventory.DisplayAllInventory(inventories);
-        Camel.DisplayAllCamels(racecamels);
+
+        System.out.println("Inventory:");
+        inventory.forEach((key,value) -> System.out.println(MessageFormat.format("{0}{1},{2}",Constants.DOLLAR_SIGN,key,value)));
+
+        System.out.println("Camels:");
+        racecamels.forEach(camel -> System.out.println(MessageFormat.format("{0},{1},{2},{3}"
+                    , camel.getNumber(), camel.getName(), camel.getOdds(), camel.getDidwin().equals(true)?"won":"lost")));
     }
 
-    public static void ProcessRequest(UserCommand userCommand) throws InvalidCommandException, NoPayoutException, InsufficientFundException {
-        switch (userCommand.getCommand()) {
-            case Constants.WINNER ->
-                Camel.SetWinningCamel(userCommand.getCamelNumber(), racecamels);
-            case Constants.BET -> {
-                Camel betCamel = Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber());
-                if (betCamel.getDidwin().equals(true)) {
-                    int totalBetAmount = betCamel.getOdds() * (int) userCommand.getBetAmount();
-                    if (Inventory.CheckInventory(inventories, totalBetAmount)) {
-                        System.out.println(MessageFormat.format("Payout: {0}{1}",Constants.DOLLAR_SIGN, totalBetAmount));
-                        DispenseAmount(inventories, betCamel.getOdds() * (int) userCommand.getBetAmount());
-                    }
-                    else
-                        throw new InsufficientFundException(Integer.toString(totalBetAmount));
-                } else
-                    throw new NoPayoutException(betCamel.getName());
-            }
-            case Constants.RESTOCK -> {
-                System.out.println("Restocked Inventory");
-                InitializeApplication();
-            }
-            case Constants.QUIT -> System.exit(0);
-            default -> throw new InvalidCommandException(userCommand.getUserInputCommand());
-        }
-    }
-
-    public static void DispenseAmount(ArrayList<Inventory> inventories, int amount) {
-
-        int[] notes = Inventory.GetAllAmounts(inventories);
-        int[] noteCounter = new int[notes.length];
-
-        for(int i =0; i<notes.length; i++){
-            if(amount>=notes[i]){
-                noteCounter[i] = (Math.min(amount / notes[i], inventories.get(i).getCount()));
-                amount = amount - noteCounter[i] * notes[i];
-            }
-        }
-        System.out.println("Dispensing:");
-        for(int i = notes.length - 1; i>=0 ; i--){
-            System.out.println(MessageFormat.format("{0}{1},{2}", Constants.DOLLAR_SIGN,notes[i],noteCounter[i]));
-            inventories.get(i).setCount(inventories.get(i).getCount() - noteCounter[i]);
-        }
-    }
-
-    public static Boolean ValidateRequest(UserCommand userCommand) throws InvalidBetException, InvalidCamelException, InvalidCommandException {
-        switch(userCommand.getCommand()) {
-            case Constants.BET:
-                if(userCommand.getBetAmount() <= Constants.DEFAULT )
-                    throw new InvalidBetException(Float.toString(userCommand.getBetAmount()));
-            case Constants.WINNER:
-                if(Camel.findByCamelNumber(racecamels, userCommand.getCamelNumber()) == null)
-                    throw new InvalidCamelException((userCommand.getCamelNumber()));
-                else
-                    return true;
-            case Constants.RESTOCK:
-            case Constants.QUIT:
-                if( userCommand.getCamelNumber() != Constants.DEFAULT)
-                    throw new InvalidCommandException(userCommand.getUserInputCommand());
-                else
-                    return true;
-            default:
-                throw new InvalidCommandException(userCommand.getUserInputCommand());
-        }
-    }
-
-    public static UserCommand ParseInputData(String userInput) throws InvalidCommandException, InvalidBetException {
-        UserCommand userCommand = new UserCommand(userInput);
-        String[] data;
+    public static Command ParseInput(String userInput) throws InvalidCommandException, InvalidBetException {
 
         //checking if the user input is empty string.
-        if(userInput.trim().isEmpty())
-            throw new InvalidCommandException(userInput);
-        else {
-            data = userInput.split(Constants.SINGLE_SPACE);
-        }
-
-        //checking for a bet...
-        if(Commons.tryParseInt(data[0]))
-        {
-            userCommand.setCamelNumber(Integer.parseInt(data[0]));
-            userCommand.setCommand(Constants.BET);
-            if(Commons.tryParseInt(data[1]))
-                userCommand.setBetAmount(Integer.parseInt(data[1]));
-            else
-                throw new InvalidBetException(data[1]);
-        }
-        else {
-            //checking if the first input has multiple characters. Eg w2 10, q2
-            if(data[0].toCharArray().length > 1)
+        if (!userInput.trim().isEmpty())
+            if(Pattern.matches("[w]?\\s\\d+",userInput)) {
+                return new WinnerCommand(userInput);
+            } else if(Pattern.matches("[q]?",userInput)) {
+                return new QuiCommand();
+            } else if(Pattern.matches("[r]?",userInput)) {
+                return new RestockCommand();
+            } else if(Pattern.matches("\\d+\\s\\d+",userInput)) {
+                return new BetCommand(userInput);
+            } else
                 throw new InvalidCommandException(userInput);
-            else
-                userCommand.setCommand(data[0].toLowerCase().toCharArray()[0]);
-
-            //Checking for the second input..
-            if(data.length >1)
-                userCommand.setCamelNumber(Integer.parseInt(data[1]));
-        }
-        return userCommand;
+        return null;
     }
 
+    public static void processBet(int camelNumber, int betAmount) throws NoPayoutException, InsufficientFundException {
+
+        Camel betCamel = racecamels.stream().filter(camel -> camel.getNumber().equals(camelNumber)).findFirst().orElse(null);
+        if (betCamel.getDidwin().equals(true)) {
+            int totalBetAmount = betCamel.getOdds() * betAmount;
+            if (getTotalInventoryValue()>= totalBetAmount) {
+                System.out.println(MessageFormat.format("Payout: {0},{1}{2}",betCamel.getName(),Constants.DOLLAR_SIGN, totalBetAmount));
+                DispenseAmount(totalBetAmount);
+            }
+            else
+                throw new InsufficientFundException(Integer.toString(totalBetAmount));
+        } else
+            throw new NoPayoutException(betCamel.getName());
+    }
+
+    private static void DispenseAmount(int amount) {
+        System.out.println("Dispensing:");
+
+        Set<Integer> set = inventory.keySet();
+        Iterator<Integer> itr = set.iterator();
+
+        while (itr.hasNext()) {
+            int noteCounter ;
+
+            Integer key = itr.next();
+            log.info(MessageFormat.format("Current value of inventory >> Currency : {0} , Count : " ,key, inventory.get(key)));
+
+            noteCounter = amount / key;
+            System.out.println(MessageFormat.format("{0}{1},{2}", Constants.DOLLAR_SIGN,key,noteCounter));
+            amount = amount - noteCounter * key;
+
+            inventory.put(key,inventory.get(key) - noteCounter); //getting existing number of notes and subtracting the count.
+            log.info(MessageFormat.format("Updated value of inventory >> Currency : {0} , Count : " ,key, inventory.get(key)));
+        }
+    }
+
+    public static int getTotalInventoryValue() {
+        return inventory.entrySet().stream().mapToInt(value -> value.getKey()* value.getValue()).sum();
+    }
+
+    public static void setWinningCamel(int winningCamel) throws InvalidCamelException {
+
+        //checking if the passed camel number is valid..
+        if(!racecamels.stream().anyMatch(camel -> camel.getNumber().equals(winningCamel)))
+            throw new InvalidCamelException(winningCamel);
+        else {
+
+            log.info("Inside the SetWinningCamel method");
+            racecamels.forEach(camel -> {
+                if (!camel.getDidwin() && camel.getNumber().equals(winningCamel)) {
+                    log.info(MessageFormat.format("setting current winning camel to TRUE. Camel No. : {1}, Camel Name : {0}", camel.getName(), camel.getNumber()));
+                    camel.setDidwin(true);
+                }
+                if (camel.getDidwin() && !camel.getNumber().equals(winningCamel)) {
+                    log.info(MessageFormat.format("setting previous winning camel to FALSE. Camel No. : {1}, Camel Name : {0}", camel.getName(), camel.getNumber()));
+                    camel.setDidwin(false);
+                }
+            });
+        }
+    }
 
 }

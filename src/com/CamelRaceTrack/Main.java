@@ -2,7 +2,7 @@ package com.CamelRaceTrack;
 
 import com.CamelRaceTrack.Controller.*;
 import com.CamelRaceTrack.ExceptionHandling.*;
-import com.CamelRaceTrack.Models.UserCommand;
+import com.CamelRaceTrack.Interfaces.Command;
 import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
 
         log.info("******************** Starting Application *************************");
-       Controller.InitializeApplication();
+       Controller.controller();
 
         while(true) {
             try {
@@ -27,9 +27,8 @@ public class Main {
                 String userInput = sc.nextLine();
                 log.info(MessageFormat.format("Provided user input : {0}", userInput));
 
-                UserCommand userCommand = Controller.ParseInputData(userInput);
-                if(Controller.ValidateRequest(userCommand))
-                   Controller.ProcessRequest(userCommand);
+                Command c = Controller.ParseInput(userInput.toLowerCase());
+                c.processRequest();
 
             } catch (Exception | InvalidBetException | InvalidCamelException | InvalidCommandException | NoPayoutException | InsufficientFundException ex) {
                 if(ex instanceof InvalidCamelException || ex instanceof  InvalidBetException || ex instanceof InvalidCommandException

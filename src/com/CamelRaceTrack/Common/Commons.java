@@ -1,13 +1,8 @@
 package com.CamelRaceTrack.Common;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class Commons {
-    public static boolean tryParseInt(String value){
-        try{
-            Integer.parseInt(value);
-            return true;
-        }
-        catch (NumberFormatException ex){
-            return false;
-        }
-    }
+
 }
