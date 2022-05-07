@@ -12,12 +12,12 @@ public final class Constants {
 
     public static final String DOLLAR_SIGN = "$";
     public static final String SINGLE_SPACE = "\\s+"; //regex to split using space.
-    public static final int DEFAULT = 0;
-    public static final Character EMPTY_CHARACTER = '\0';
+//    public static final int DEFAULT = 0;
+//    public static final Character EMPTY_CHARACTER = '\0';
 //    public static final String EMPTY_STRING = "" ;
 
-    public static final char WINNER = 'w';
-    public static final char RESTOCK = 'r';
-    public static final char QUIT = 'q';
-    public static final char BET = 'b';
+//    public static final char WINNER = 'w';
+//    public static final char RESTOCK = 'r';
+//    public static final char QUIT = 'q';
+//    public static final char BET = 'b';
 }
