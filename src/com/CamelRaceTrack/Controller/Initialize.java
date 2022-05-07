@@ -11,7 +11,7 @@ import java.util.Map;
 
 public abstract class Initialize {
 
-    private static org.apache.log4j.Logger log = Logger.getLogger(Controller.class);
+    private static org.apache.log4j.Logger log = Logger.getLogger(Initialize.class);
 
     protected static ArrayList<Camel> racecamels;
     protected static Map<Integer, Integer> inventory ;
