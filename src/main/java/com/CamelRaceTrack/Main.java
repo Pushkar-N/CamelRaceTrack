@@ -1,8 +1,11 @@
 package com.CamelRaceTrack;
 
+import com.CamelRaceTrack.Controller.Controller;
 import com.CamelRaceTrack.ExceptionHandling.*;
 import com.CamelRaceTrack.Interfaces.Command;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.text.MessageFormat;
 import java.util.Scanner;
@@ -17,18 +20,20 @@ public class Main {
     public static void main(String[] args) {
 
         log.info("******************** Starting Application *************************");
-       Initialize();
+        log.info("Initialising application.");
+        ApplicationContext context = new ClassPathXmlApplicationContext("config.xml");
+        Controller controller = context.getBean("controller", Controller.class);
 
         while(true) {
             try {
-                DisplayCurrentApplicationStatus();
+                controller.showStatus();
 
                 log.info(">>>>>>>>>>>>>>>>> Requesting user input >>>>>>>>>>>>>>>");
                 Scanner sc = new Scanner(System.in);
                 String userInput = sc.nextLine();
                 log.info(MessageFormat.format("Provided user input : {0}", userInput));
 
-                Command c = ParseInput(userInput.toLowerCase());
+                Command c = controller.parseInput(userInput.toLowerCase());
                 c.processRequest();
 
             } catch (Exception | InvalidBetException | InvalidCamelException | InvalidCommandException | NoPayoutException | InsufficientFundException ex) {

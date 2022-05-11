@@ -9,17 +9,17 @@ import com.CamelRaceTrack.Interfaces.Command;
 
 public class BetCommand implements Command {
 
-    private int CamelNumber;
-    private int BetAmount;
+    private int camelNumber;
+    private int betAmount;
 
     public BetCommand(String userInput) {
         String[] data = userInput.split(Constants.SINGLE_SPACE);
-        CamelNumber = Integer.parseInt(data[0]);
-        BetAmount = Integer.parseInt(data[1]);
+        camelNumber = Integer.parseInt(data[0]);
+        betAmount = Integer.parseInt(data[1]);
     }
 
     @Override
     public void processRequest() throws InvalidCommandException, NoPayoutException, InsufficientFundException {
-        Controller.processBet(CamelNumber,BetAmount);
+        Controller.processBet(camelNumber, betAmount);
     }
 }
