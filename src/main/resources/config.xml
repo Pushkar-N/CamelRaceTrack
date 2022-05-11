@@ -10,48 +10,49 @@ xsi:schemaLocation="
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
     <context:annotation-config/>
+    <context:property-placeholder location="classpath:log4j.properties"/>
 
     <bean id="THAT_DRAN_GRAY_CAT" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="1"/>
-        <constructor-arg name="name" value="That Darn Gray Cat"/>
-        <constructor-arg name="odds" value="5"/>
-        <constructor-arg name="didwin" value="true"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.THAT_DRAN_GRAY_CAT.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.THAT_DRAN_GRAY_CAT.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.THAT_DRAN_GRAY_CAT.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.THAT_DRAN_GRAY_CAT.didwin}"/>
     </bean>
     <bean id="FORT_UTOPIA" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="2"/>
-        <constructor-arg name="name" value="Fort Utopia"/>
-        <constructor-arg name="odds" value="10"/>
-        <constructor-arg name="didwin" value="false"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.FORT_UTOPIA.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.FORT_UTOPIA.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.FORT_UTOPIA.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.FORT_UTOPIA.didwin}"/>
     </bean>
     <bean id="COUNT_SHEEP" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="3"/>
-        <constructor-arg name="name" value="Count Sheep"/>
-        <constructor-arg name="odds" value="9"/>
-        <constructor-arg name="didwin" value="false"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.COUNT_SHEEP.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.COUNT_SHEEP.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.COUNT_SHEEP.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.COUNT_SHEEP.didwin}"/>
     </bean>
     <bean id="MS_TRAITOUR" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="4"/>
-        <constructor-arg name="name" value="Ms Traitour"/>
-        <constructor-arg name="odds" value="4"/>
-        <constructor-arg name="didwin" value="false"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.MS_TRAITOUR.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.MS_TRAITOUR.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.MS_TRAITOUR.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.MS_TRAITOUR.didwin}"/>
     </bean>
     <bean id="REAL_PRINCESS" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="5"/>
-        <constructor-arg name="name" value="Real Princess"/>
-        <constructor-arg name="odds" value="3"/>
-        <constructor-arg name="didwin" value="false"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.REAL_PRINCESS.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.REAL_PRINCESS.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.REAL_PRINCESS.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.REAL_PRINCESS.didwin}"/>
     </bean>
     <bean id="PA_KETTLE" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="6"/>
-        <constructor-arg name="name" value="Pa Kettle"/>
-        <constructor-arg name="odds" value="5"/>
-        <constructor-arg name="didwin" value="false"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.PA_KETTLE.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.PA_KETTLE.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.PA_KETTLE.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.PA_KETTLE.didwin}"/>
     </bean>
     <bean id="GIN_STRINGER" class="com.CamelRaceTrack.Models.Camel">
-        <constructor-arg name="number" value="7"/>
-        <constructor-arg name="name" value="Gin Stringer"/>
-        <constructor-arg name="odds" value="6"/>
-        <constructor-arg name="didwin" value="false"/>
+        <constructor-arg name="number" value="${com.CamelRaceTrack.Models.Camel.GIN_STRINGER.number}"/>
+        <constructor-arg name="name" value="${com.CamelRaceTrack.Models.Camel.GIN_STRINGER.name}"/>
+        <constructor-arg name="odds" value="${com.CamelRaceTrack.Models.Camel.GIN_STRINGER.odds}"/>
+        <constructor-arg name="didwin" value="${com.CamelRaceTrack.Models.Camel.GIN_STRINGER.didwin}"/>
     </bean>
 
     <bean id="racecamels" class="java.util.ArrayList">
@@ -69,11 +70,11 @@ xsi:schemaLocation="
     </bean>
 
     <util:map id="inventory" map-class="java.util.LinkedHashMap">
-        <entry key="100" value="10" value-type="java.lang.Integer"/>
-        <entry key="20" value="10" value-type="java.lang.Integer"/>
-        <entry key="10" value="10" value-type="java.lang.Integer"/>
-        <entry key="5" value="10" value-type="java.lang.Integer"/>
-        <entry key="1" value="10" value-type="java.lang.Integer"/>
+        <entry key="${java.util.LinkedHashMap.inventory.key1}" value="${java.util.LinkedHashMap.inventory.value}" value-type="java.lang.Integer"/>
+        <entry key="${java.util.LinkedHashMap.inventory.key2}" value="${java.util.LinkedHashMap.inventory.value}" value-type="java.lang.Integer"/>
+        <entry key="${java.util.LinkedHashMap.inventory.key3}" value="${java.util.LinkedHashMap.inventory.value}" value-type="java.lang.Integer"/>
+        <entry key="${java.util.LinkedHashMap.inventory.key4}" value="${java.util.LinkedHashMap.inventory.value}" value-type="java.lang.Integer"/>
+        <entry key="${java.util.LinkedHashMap.inventory.key5}" value="${java.util.LinkedHashMap.inventory.value}" value-type="java.lang.Integer"/>
     </util:map>
 
     <bean id="controller" class="com.CamelRaceTrack.Controller.Controller" autowire="byName">
