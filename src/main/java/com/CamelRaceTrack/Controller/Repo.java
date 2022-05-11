@@ -14,18 +14,14 @@ public class Repo {
     protected static ArrayList<Camel> racecamels;
     protected static LinkedHashMap<Integer, Integer> inventory ;
 
-    @Autowired
     public void setInventory(LinkedHashMap<Integer, Integer> inventory) {
         log.info("Initialising inventory");
         this.inventory = inventory;
     }
 
-    @Autowired
     public void setRacecamels(ArrayList<Camel> racecamels) {
         log.info("Initialising race camels");
         this.racecamels = racecamels;
     }
-
-
 
 }
