@@ -2,7 +2,6 @@ package com.CamelRaceTrack.Controller;
 
 import com.CamelRaceTrack.Models.Camel;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
